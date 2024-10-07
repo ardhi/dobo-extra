@@ -1,5 +1,4 @@
 {
-  "alias": "dbx",
   "export": {
     "maxBatch": 1000,
     "stringify": {
