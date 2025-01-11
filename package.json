@@ -27,12 +27,11 @@
   "homepage": "https://github.com/ardhi/dobo-extra#readme",
   "dependencies": {
     "@atomictech/xlsx-write-stream": "^2.0.2",
-    "fast-csv": "^5.0.1",
-    "fast-jwt": "^4.0.2",
+    "fast-csv": "^5.0.2",
     "ndjson": "^2.0.0",
     "scramjet": "^4.37.0",
-    "stream-chain": "^2.2.5",
-    "stream-json": "^1.8.0",
+    "stream-chain": "^3.3.2",
+    "stream-json": "^1.9.1",
     "xlsx-parse-stream": "^1.1.0"
   }
 }
