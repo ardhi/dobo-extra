@@ -14,6 +14,5 @@
     "tasks": [],
     "checkInterval": false,
     "runEarly": true
-  },
-  "dependencies": ["dobo", "bajo-extra"]
+  }
 }
