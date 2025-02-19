@@ -5,7 +5,7 @@ const batch = 100
 function makeProgress (spin) {
   const { secToHms } = this.app.bajo
   return async function ({ batchNo, data, batchStart, batchEnd } = {}) {
-    spin.setText('Batch #%d (%s)', batchNo, secToHms(batchEnd.toTime() - batchStart.toTime(), true))
+    spin.setText('batch%d%s', batchNo, secToHms(batchEnd.toTime() - batchStart.toTime(), true))
   }
 }
 
@@ -17,32 +17,32 @@ async function importFrom (...args) {
   const [input, select, confirm] = await importPkg('bajoCli:@inquirer/input',
     'bajoCli:@inquirer/select', 'bajoCli:@inquirer/confirm')
   const schemas = map(this.app.dobo.schemas, 'name')
-  if (isEmpty(schemas)) return this.print.fatal('No schema found!')
+  if (isEmpty(schemas)) return this.print.fatal('notFound%s', this.print.write('field.schema'))
   let [dest, model] = args
   if (isEmpty(dest)) {
     dest = await input({
-      message: this.print.write('Please enter source file:'),
+      message: this.print.write('enterSourceFile'),
       validate: (item) => !isEmpty(item)
     })
   }
   if (isEmpty(model)) {
     model = await select({
-      message: this.print.write('Please choose model:'),
+      message: this.print.write('chooseModel'),
       choices: map(schemas, s => ({ value: s }))
     })
   }
   const answer = await confirm({
-    message: this.print.write('You\'re about to replace ALL records with the new ones. Are you really sure?'),
+    message: this.print.write('aboutToReplaceAllRecords'),
     default: false
   })
-  if (!answer) return this.print.fatal('Aborted!')
-  const spin = this.print.spinner({ showCounter: true }).start('Importing...')
+  if (!answer) return this.print.fatal('aborted')
+  const spin = this.print.spinner({ showCounter: true }).start('importing')
   const progressFn = makeProgress.call(this, spin)
   const { connection } = getInfo(model)
   await start(connection.name)
   try {
     const result = await importFrom(dest, model, { batch, progressFn })
-    spin.succeed('%d records successfully imported from \'%s\'', result.count, _path.resolve(result.file))
+    spin.succeed('recordsImported%d%s', result.count, _path.resolve(result.file))
   } catch (err) {
     spin.fatal('Error: %s', err.message)
   }

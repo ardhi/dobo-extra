@@ -21,7 +21,7 @@ async function getFile (dest, ensureDir) {
   const dir = path.dirname(file)
   if (!fs.existsSync(dir)) {
     if (ensureDir) fs.ensureDirSync(dir)
-    else throw this.error('Directory \'%s\' doesn\'t exist', dir)
+    else throw this.error('dirNotExists%s', dir)
   }
   let compress = false
   let ext = path.extname(file)
@@ -30,7 +30,7 @@ async function getFile (dest, ensureDir) {
     ext = path.extname(path.basename(file).replace('.gz', ''))
     // file = file.slice(0, file.length - 3)
   }
-  if (!supportedExt.includes(ext)) throw this.error('Unsupported format \'%s\'', ext.slice(1))
+  if (!supportedExt.includes(ext)) throw this.error('unsupportedFormat%s', ext.slice(1))
   return { file, ext, compress }
 }
 

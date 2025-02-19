@@ -20,14 +20,14 @@ async function importFrom (source, dest, { trashOld = true, batch = 1, progressF
     file = `${getPluginDataDir(this.name)}/import/${source}`
     fs.ensureDirSync(path.dirname(file))
   }
-  if (!fs.existsSync(file)) throw this.error('Source file \'%s\' doesn\'t exist', file)
+  if (!fs.existsSync(file)) throw this.error('sourceFileNotExists%s', file)
   let ext = fileType ? `.${fileType}` : path.extname(file)
   let decompress = false
   if (ext === '.gz') {
     ext = path.extname(path.basename(file, '.gz'))
     decompress = true
   }
-  if (!supportedExt.includes(ext)) throw this.error('Unsupported format \'%s\'', ext.slice(1))
+  if (!supportedExt.includes(ext)) throw this.error('unsupportedFormat%s', ext.slice(1))
   if (trashOld && dest !== false) await this.app.dobo.modelClear(dest)
   const reader = fs.createReadStream(file)
   batch = parseInt(batch) || 100
