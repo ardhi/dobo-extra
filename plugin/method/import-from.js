@@ -10,8 +10,8 @@ const { json, ndjson, csv, xlsx } = format
 async function importFrom (source, dest, { trashOld = true, batch = 1, progressFn, converterFn, useHeader = true, fileType, createOpts = {} } = {}, opts = {}) {
   const { getPluginDataDir } = this.app.bajo
   const { recordCreate } = this.app.dobo
-  const { merge } = this.app.bajo.lib._
-  const { fs } = this.app.bajo.lib
+  const { merge } = this.lib._
+  const { fs } = this.lib
 
   if (dest !== false) this.app.dobo.getInfo(dest) // make sure dest model is valid
   let file
