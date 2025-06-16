@@ -3,7 +3,7 @@ import _path from 'path'
 const batch = 100
 
 function makeProgress (spin) {
-  const { secToHms } = this.app.bajo
+  const { secToHms } = this.lib.aneka
   return async function ({ batchNo, data, batchStart, batchEnd } = {}) {
     if (data.length === 0) return
     spin.setText('batch%d%s', batchNo, secToHms(batchEnd.toTime() - batchStart.toTime(), true))
