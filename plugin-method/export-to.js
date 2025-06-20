@@ -1,8 +1,8 @@
 import path from 'path'
-import format from '../../lib/ndjson-csv-xlsx.js'
+import format from '../lib/ndjson-csv-xlsx.js'
 import { createGzip } from 'node:zlib'
 import scramjet from 'scramjet'
-import supportedExt from '../../lib/io-exts.js'
+import supportedExt from '../lib/io-exts.js'
 
 const { DataStream } = scramjet
 const { json, ndjson, csv, xlsx } = format
