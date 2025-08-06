@@ -27,19 +27,19 @@ async function getFile (dest, ensureDir) {
   let ext = path.extname(file)
   if (ext === '.gz') {
     compress = true
-    ext = path.extname(path.basename(file).replace('.gz', ''))
+    ext = path.extname(file.slice(0, -3))
     // file = file.slice(0, file.length - 3)
   }
   if (!supportedExt.includes(ext)) throw this.error('unsupportedFormat%s', ext.slice(1))
   return { file, ext, compress }
 }
 
-async function getData ({ source, filter, count, stream, progressFn }) {
+async function getData ({ source, filter, count, stream, progressFn, fields }) {
   let cnt = count ?? 0
   const { recordFind } = this.app.dobo
   for (;;) {
     const batchStart = new Date()
-    const { data, page } = await recordFind(source, filter, { dataOnly: false })
+    const { data, page } = await recordFind(source, filter, { dataOnly: false, fields })
     if (data.length === 0) break
     cnt += data.length
     await stream.pull(data)
@@ -50,9 +50,10 @@ async function getData ({ source, filter, count, stream, progressFn }) {
   return cnt
 }
 
-function exportTo (source, dest, { filter = {}, ensureDir, useHeader = true, batch = 500, progressFn } = {}, opts = {}) {
+function exportTo (source, dest, { filter = {}, ensureDir, useHeader = true, batch = 500, progressFn, fields } = {}, opts = {}) {
   const { fs } = this.lib
   const { merge } = this.lib._
+  const { getInfo } = this.app.dobo
 
   filter.page = 1
   batch = parseInt(batch) ?? 500
@@ -61,7 +62,6 @@ function exportTo (source, dest, { filter = {}, ensureDir, useHeader = true, bat
   filter.limit = batch
 
   return new Promise((resolve, reject) => {
-    const { getInfo } = this.app.dobo
     let count = 0
     let file
     let ext
@@ -69,9 +69,7 @@ function exportTo (source, dest, { filter = {}, ensureDir, useHeader = true, bat
     let compress
     let writer
     getInfo(source)
-      .then(res => {
-        return getFile.call(this, dest, ensureDir)
-      })
+    getFile.call(this, dest, ensureDir)
       .then(res => {
         file = res.file
         ext = res.ext
@@ -93,7 +91,7 @@ function exportTo (source, dest, { filter = {}, ensureDir, useHeader = true, bat
         else if (ext === '.xlsx') pipes.push(xlsx.stringify(merge({}, { header: useHeader }, opts)))
         if (compress) pipes.push(createGzip())
         DataStream.pipeline(stream, ...pipes).pipe(writer)
-        return getData.call(this, { source, filter, count, stream, progressFn })
+        return getData.call(this, { source, filter, count, stream, fields, progressFn })
       })
       .then(cnt => {
         count = cnt
