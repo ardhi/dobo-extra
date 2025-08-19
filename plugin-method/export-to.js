@@ -36,11 +36,32 @@ async function getFile (dest, ensureDir) {
 
 async function getData ({ source, filter, count, stream, progressFn, fields }) {
   let cnt = count ?? 0
-  const { recordFind } = this.app.dobo
+  const { find } = this.lib._
+  const { recordFind, getSchema } = this.app.dobo
+  const { maxLimit, hardLimit } = this.app.dobo.config.default.filter
+  filter.limit = maxLimit
+  let sort
+  const schema = getSchema(source)
+  const idField = find(schema.properties, { name: 'id' })
+  for (const name of ['createdAt', 'updatedAt', 'ts', 'dt']) {
+    const field = find(schema.properties, { name })
+    if (field) {
+      sort = field.name
+      break
+    }
+  }
+  filter.sort = `${sort ?? idField}:1`
   for (;;) {
     const batchStart = new Date()
     const { data, page } = await recordFind(source, filter, { dataOnly: false, fields })
     if (data.length === 0) break
+    if (cnt + data.length > hardLimit) {
+      const sliced = data.slice(0, hardLimit - cnt)
+      await stream.pull(sliced)
+      cnt += sliced.length
+      if (progressFn) await progressFn.call(this, { batchNo: page, data: sliced, batchStart, batchEnd: new Date() })
+      break
+    }
     cnt += data.length
     await stream.pull(data)
     if (progressFn) await progressFn.call(this, { batchNo: page, data, batchStart, batchEnd: new Date() })
