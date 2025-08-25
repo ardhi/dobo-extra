@@ -1,11 +1,12 @@
 async function factory (pkgName) {
   const me = this
 
-  return class DoboExtra extends this.lib.Plugin {
+  class DoboExtra extends this.lib.Plugin {
+    static alias = 'dbx'
+    static dependencies = ['dobo', 'bajo-extra']
+
     constructor () {
       super(pkgName, me.app)
-      this.alias = 'dbx'
-      this.dependencies = ['dobo', 'bajo-extra']
       this.config = {
         export: {
           maxBatch: 1000,
@@ -63,6 +64,8 @@ async function factory (pkgName) {
       }, this.config.archive.checkInterval * 60 * 1000)
     }
   }
+
+  return DoboExtra
 }
 
 export default factory
