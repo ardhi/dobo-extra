@@ -3,7 +3,7 @@ import _path from 'path'
 const batch = 100
 
 function makeProgress (spin) {
-  const { secToHms } = this.lib.aneka
+  const { secToHms } = this.app.lib.aneka
   return async function ({ batchNo, data, batchStart, batchEnd } = {}) {
     if (data.length === 0) return
     spin.setText('batch%d%s', batchNo, secToHms(batchEnd.toTime() - batchStart.toTime(), true))
@@ -12,31 +12,31 @@ function makeProgress (spin) {
 
 async function exportTo (...args) {
   const { importPkg } = this.app.bajo
-  const { dayjs } = this.lib
-  const { isEmpty, map } = this.lib._
+  const { dayjs } = this.app.lib
+  const { isEmpty, map } = this.app.lib._
   const { getInfo, start } = this.app.dobo
 
   const [input, select] = await importPkg('bajoCli:@inquirer/input',
     'bajoCli:@inquirer/select')
   const schemas = map(this.app.dobo.schemas, 'name')
-  if (isEmpty(schemas)) return this.print.fatal('notFound%s', this.print.write('field.schema'))
+  if (isEmpty(schemas)) return this.print.fatal('notFound%s', this.t('field.schema'))
   let [model, dest, query] = args
   if (isEmpty(model)) {
     model = await select({
-      message: this.print.write('chooseModel'),
+      message: this.t('chooseModel'),
       choices: map(schemas, s => ({ value: s }))
     })
   }
   if (isEmpty(dest)) {
     dest = await input({
-      message: this.print.write('enterDestFile'),
+      message: this.t('enterDestFile'),
       default: `${model}-${dayjs().format('YYYYMMDD')}.ndjson`,
       validate: (item) => !isEmpty(item)
     })
   }
   if (isEmpty(query)) {
     query = await input({
-      message: this.print.write('enterQueryIfAny')
+      message: this.t('enterQueryIfAny')
     })
   }
   const spin = this.print.spinner().start('exporting')

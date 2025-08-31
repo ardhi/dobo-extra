@@ -1,7 +1,7 @@
 async function factory (pkgName) {
   const me = this
 
-  class DoboExtra extends this.lib.Plugin {
+  class DoboExtra extends this.app.pluginClass.base {
     static alias = 'dbx'
     static dependencies = ['dobo', 'bajo-extra']
 
@@ -34,7 +34,7 @@ async function factory (pkgName) {
       async function handler ({ item }) {
         const { join } = this.app.bajo
         const { getSchema } = this.app.dobo
-        const { has } = this.lib._
+        const { has } = this.app.lib._
         for (const f of ['source', 'destination']) {
           if (!has(item, f)) throw this.error('taskMustHaveModel%s', f)
           const key = `${f}Field`

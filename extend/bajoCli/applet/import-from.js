@@ -3,7 +3,7 @@ import _path from 'path'
 const batch = 100
 
 function makeProgress (spin) {
-  const { secToHms } = this.lib.aneka
+  const { secToHms } = this.app.lib.aneka
   return async function ({ batchNo, data, batchStart, batchEnd } = {}) {
     spin.setText('batch%d%s', batchNo, secToHms(batchEnd.toTime() - batchStart.toTime(), true))
   }
@@ -11,28 +11,28 @@ function makeProgress (spin) {
 
 async function importFrom (...args) {
   const { importPkg } = this.app.bajo
-  const { isEmpty, map } = this.lib._
+  const { isEmpty, map } = this.app.lib._
   const { getInfo, start } = this.app.dobo
 
   const [input, select, confirm] = await importPkg('bajoCli:@inquirer/input',
     'bajoCli:@inquirer/select', 'bajoCli:@inquirer/confirm')
   const schemas = map(this.app.dobo.schemas, 'name')
-  if (isEmpty(schemas)) return this.print.fatal('notFound%s', this.print.write('field.schema'))
+  if (isEmpty(schemas)) return this.print.fatal('notFound%s', this.t('field.schema'))
   let [dest, model] = args
   if (isEmpty(dest)) {
     dest = await input({
-      message: this.print.write('enterSourceFile'),
+      message: this.t('enterSourceFile'),
       validate: (item) => !isEmpty(item)
     })
   }
   if (isEmpty(model)) {
     model = await select({
-      message: this.print.write('chooseModel'),
+      message: this.t('chooseModel'),
       choices: map(schemas, s => ({ value: s }))
     })
   }
   const answer = await confirm({
-    message: this.print.write('aboutToReplaceAllRecords'),
+    message: this.t('aboutToReplaceAllRecords'),
     default: false
   })
   if (!answer) return this.print.fatal('aborted')

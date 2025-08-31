@@ -1,7 +1,7 @@
 async function move (task) {
   const { importPkg } = this.app.bajo
-  const { dayjs } = this.lib
-  const { set } = this.lib._
+  const { dayjs } = this.app.lib
+  const { set } = this.app.lib._
   const { formatInteger } = this.app.bajoExtra
   const { recordFind, recordCreate, recordRemove, statAggregate } = this.app.dobo
   const prompts = await importPkg('bajoCli:@inquirer/prompts')
@@ -18,7 +18,7 @@ async function move (task) {
   }
   if (this.config.prompt !== false) {
     const answer = await confirm({
-      message: this.print.write('recordsArchivedContinue%d', count),
+      message: this.t('recordsArchivedContinue%d', count),
       default: true
     })
     if (!answer) {
@@ -75,7 +75,7 @@ async function archive (...args) {
   const { confirm } = prompts
   if (this.config.prompt !== false) {
     const answer = await confirm({
-      message: this.print.write('manuallyRunTaskContinue'),
+      message: this.t('manuallyRunTaskContinue'),
       default: false
     })
 

@@ -9,7 +9,7 @@ const { json, ndjson, csv, xlsx } = format
 
 async function getFile (dest, ensureDir) {
   const { importPkg, getPluginDataDir } = this.app.bajo
-  const { fs } = this.lib
+  const { fs } = this.app.lib
   const increment = await importPkg('bajo:add-filename-increment')
   let file
   if (path.isAbsolute(dest)) file = dest
@@ -36,7 +36,7 @@ async function getFile (dest, ensureDir) {
 
 async function getData ({ source, filter, count, stream, progressFn, fields }) {
   let cnt = count ?? 0
-  const { find } = this.lib._
+  const { find } = this.app.lib._
   const { recordFind, getSchema } = this.app.dobo
   const { maxLimit, hardLimit } = this.app.dobo.config.default.filter
   filter.limit = maxLimit
@@ -72,8 +72,8 @@ async function getData ({ source, filter, count, stream, progressFn, fields }) {
 }
 
 function exportTo (source, dest, { filter = {}, ensureDir, useHeader = true, batch = 500, progressFn, fields } = {}, opts = {}) {
-  const { fs } = this.lib
-  const { merge } = this.lib._
+  const { fs } = this.app.lib
+  const { merge } = this.app.lib._
   const { getInfo } = this.app.dobo
 
   filter.page = 1
