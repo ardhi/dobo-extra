@@ -17,7 +17,7 @@ async function importFrom (source, dest, { trashOld = true, batch = 1, progressF
   let file
   if (path.isAbsolute(source)) file = source
   else {
-    file = `${getPluginDataDir(this.name)}/import/${source}`
+    file = `${getPluginDataDir(this.ns)}/import/${source}`
     fs.ensureDirSync(path.dirname(file))
   }
   if (!fs.existsSync(file)) throw this.error('sourceFileNotExists%s', file)

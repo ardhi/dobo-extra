@@ -14,7 +14,7 @@ async function getFile (dest, ensureDir) {
   let file
   if (path.isAbsolute(dest)) file = dest
   else {
-    file = `${getPluginDataDir(this.name)}/export/${dest}`
+    file = `${getPluginDataDir(this.ns)}/export/${dest}`
     fs.ensureDirSync(path.dirname(file))
   }
   file = increment(file, { fs: true })

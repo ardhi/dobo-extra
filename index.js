@@ -48,7 +48,7 @@ async function factory (pkgName) {
         item.maxAge = item.maxAge ?? 1 // in days, less then 1 is ignored
       }
 
-      this.archivers = await buildCollections({ ns: this.name, handler, container: 'archive.tasks', dupChecks: ['source'], useDefaultName: false })
+      this.archivers = await buildCollections({ ns: this.ns, handler, container: 'archive.tasks', dupChecks: ['source'], useDefaultName: false })
     }
 
     start = async () => {
