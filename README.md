@@ -1,22 +1,25 @@
 # dobo-extra
 
-Plugin name: **doboExtra**, alias: **dbxtra**
-
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/ardhi/dobo-extra) ![NPM Version](https://img.shields.io/npm/v/dobo-extra)
 
-> <br />**Attention**: I do NOT accept any pull request at the moment, thanks!<br /><br />
+> <br />**Attention**: I do NOT accept any pull requests at the moment, thanks! ([Why?](https://github.com/ardhi/bajo/blob/main/tutorial/00-welcome.md#contribution))<br /><br />
 
-Tools & utility for [Dobo](https://github.com/ardhi/dobo)
+Tools for [Dobo](https://github.com/ardhi/dobo)
 
 ## Installation
 
-Goto your ```<bajo-base-dir>``` and type:
+First, go to your ```{app-dir}``` and run the following command in your terminal:
 
 ```bash
-$ npm install dobo-extra
+$ npm install dobo dobo-extra bajo-extra
 ```
 
-Now open your ```<bajo-data-dir>/config/.plugins``` and put ```dobo-extra``` in it
+Next, open the file located at ```{data-dir}/config/.plugins``` and add ```dobo```, ```dobo-extra``` and ```bajo-extra```
+
+## Documentations
+
+- [Config Object](tutorial/00-config.md)
+- [API](https://ardhi.github.io/dobo-extra)
 
 ## License
 

@@ -4,7 +4,8 @@
   "description": "Bajo DB Extra Tools/Utility",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-doc": "jsdoc -c .jsdoc.conf.json",
+    "test": "mocha"
   },
   "type": "module",
   "bajo": {
@@ -36,5 +37,9 @@
     "stream-chain": "^3.3.2",
     "stream-json": "^1.9.1",
     "xlsx-parse-stream": "^1.1.0"
+  },
+  "devDependencies": {
+    "clean-jsdoc-theme": "^4.3.0",
+    "jsdoc-plugin-intersection": "^1.0.4"
   }
 }
