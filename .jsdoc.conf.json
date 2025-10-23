@@ -6,26 +6,25 @@
     "verbose": true,
     "destination": "./docs",
     "template": "node_modules/clean-jsdoc-theme",
-    "tutorials": "./tutorial",
-    "readme": "../shared/static/home.md",
+    "readme": "./docs/static/home.md",
     "theme_opts": {
       "default_theme": "light",
       "display-module-header": true,
-      "title": "Dobo's Extra",
-      "homepageTitle": "Dobo's Extra",
-      "sections": ["Tutorials", "Classes", "Events", "Modules", "Global"],
+      "title": "DoboExtra API",
+      "homepageTitle": "DoboExtra API",
+      "sections": ["Classes", "Events", "Modules", "Global"],
       "menu": [{
-        "title": "Dobo",
-        "link": "https://bajo.app/dobo"
-      }, {
         "title": "NPM",
         "link": "https://www.npmjs.com/package/dobo-extra"
       }, {
         "title": "Github",
         "link": "https://github.com/ardhi/dobo-extra"
       }, {
+        "title": "Dobo",
+        "link": "https://dobo.bajo.app/"
+      }, {
         "title": "Bajo",
-        "link": "https://bajo.app"
+        "link": "https://bajo.app/"
       }]
     }
   },
@@ -41,13 +40,6 @@
   "sourceType": "module",
   "templates": {
     "cleverLinks": false,
-    "monospaceLinks": false,
-    "default": {
-      "staticFiles": {
-        "include": [
-          "../shared"
-        ]
-      }
-    }
+    "monospaceLinks": false
   }
 }
