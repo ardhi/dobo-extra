@@ -1,6 +1,6 @@
 {
   "name": "dobo-extra",
-  "version": "2.0.1",
+  "version": "2.2.0",
   "description": "Bajo DB Extra Tools/Utility",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,9 @@
   },
   "type": "module",
   "bajo": {
-    "type": "plugin"
+    "type": "plugin",
+    "alias": "dbx",
+    "dependencies": ["dobo", "bajo-extra"]
   },
   "repository": {
     "type": "git",

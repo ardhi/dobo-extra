@@ -1,3 +1,6 @@
+import exportTo from './lib/export-to.js'
+import importFrom from './lib/import-from.js'
+
 /**
  * Plugin factory
  *
@@ -12,10 +15,7 @@ async function factory (pkgName) {
    *
    * @class
    */
-  class DoboExtra extends this.app.pluginClass.base {
-    static alias = 'dbx'
-    static dependencies = ['dobo', 'bajo-extra']
-
+  class DoboExtra extends this.app.baseClass.Base {
     constructor () {
       super(pkgName, me.app)
       this.config = {
@@ -36,6 +36,8 @@ async function factory (pkgName) {
           runEarly: true
         }
       }
+
+      this.selfBind(['exportTo', 'importFrom'])
     }
 
     init = async () => {
@@ -74,6 +76,9 @@ async function factory (pkgName) {
         })
       }, this.config.archive.checkInterval * 60 * 1000)
     }
+
+    exportTo = exportTo
+    importFrom = importFrom
   }
 
   return DoboExtra

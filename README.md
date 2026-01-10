@@ -8,13 +8,13 @@ Tools for [Dobo](https://github.com/ardhi/dobo)
 
 ## Installation
 
-First, go to your ```{app-dir}``` and run the following command in your terminal:
+First, go to your ```{appDir}``` and run the following command in your terminal:
 
 ```bash
 $ npm install dobo dobo-extra bajo-extra
 ```
 
-Next, open the file located at ```{data-dir}/config/.plugins``` and add ```dobo```, ```dobo-extra``` and ```bajo-extra```
+And enable the plugin by adding ```dobo```m ```dobo-extra``` and ```bajo-extra``` to the plugin list in either the ```$dataDir/config/.plugins``` file or the ```bajo.plugins``` array within your ```package.json``` file
 
 ## Documentations
 
