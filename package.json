@@ -1,6 +1,6 @@
 {
   "name": "dobo-extra",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Bajo DB Extra Tools/Utility",
   "main": "index.js",
   "scripts": {
