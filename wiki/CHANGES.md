@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-06-12
+
+- [2.4.0] Necessary updates to ```bajo@2.18.0``` specs
+
 ## 2026-04-11
 
 - [2.3.1] Bug fix in ```export-to.js```
