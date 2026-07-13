@@ -12,7 +12,7 @@
       "display-module-header": true,
       "title": "DoboExtra API",
       "homepageTitle": "DoboExtra API",
-      "sections": ["Classes", "Events", "Modules", "Global"],
+      "sections": ["Classes", "Events", "Modules", "Externals", "Global"],
       "menu": [{
         "title": "NPM",
         "link": "https://www.npmjs.com/package/dobo-extra"

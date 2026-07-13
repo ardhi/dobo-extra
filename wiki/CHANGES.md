@@ -1,5 +1,10 @@
 # Changes
 
+## 2026-07-13
+
+- [2.5.0] Reorganize files
+- [2.5.0] Update documentations
+
 ## 2026-06-12
 
 - [2.4.0] Necessary updates to ```bajo@2.18.0``` specs
