@@ -141,7 +141,7 @@ async function factory (pkgName) {
       } = options
       const { importPkg } = this.app.bajo
       const { fs } = this.app.lib
-      const { merge } = this.app.lib._
+      const { merge, omit } = this.app.lib._
       const { getModel } = this.app.dobo
 
       const getFile = async () => {
@@ -152,7 +152,7 @@ async function factory (pkgName) {
           file = `${this.app.getPluginDataDir(this.ns)}/export/${dest}`
           fs.ensureDirSync(path.dirname(file))
         }
-        file = increment(file, { fs: true })
+        file = increment(file, { fs: true, platform: 'win32' })
         const dir = path.dirname(file)
         if (!fs.existsSync(dir)) {
           if (ensureDir) fs.ensureDirSync(dir)
@@ -189,7 +189,8 @@ async function factory (pkgName) {
         filter.sort = `${sort ?? idField}:1`
         for (;;) {
           const batchStart = new Date()
-          const { data, page } = await model.findRecord(filter, { dataOnly: false, fields })
+          const { data: rows, page } = await model.findRecord(filter, { dataOnly: false, fields, fmt: true, refs: '*', noCache: true })
+          const data = rows.map(item => omit(item, ['_immutable', '_fmt', '_ref']))
           if (data.length === 0) break
           if (cnt + data.length > hardCap) {
             const sliced = data.slice(0, hardCap - cnt)

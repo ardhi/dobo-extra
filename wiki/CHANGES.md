@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-07-25
+
+- [2.5.1] Bug fix in `exportTo()`
+
 ## 2026-07-13
 
 - [2.5.0] Reorganize files
