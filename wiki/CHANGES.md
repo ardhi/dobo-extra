@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-07-26
+
+- [2.5.2] Bug fix in `exportTo()`
+
 ## 2026-07-25
 
 - [2.5.1] Bug fix in `exportTo()`

@@ -126,7 +126,6 @@ async function factory (pkgName) {
      * @param {string} dest - Destination file path (absolute or relative to plugin data dir)
      * @param {object} options - Export options
      * @param {object} [options.filter={}] - Filter object to select records to export
-     * @param {boolean} [options.ensureDir] - Whether to create the destination directory if it doesn't exist
      * @param {boolean} [options.useHeader=true] - Whether to include the header row (for CSV/TSV/XLSX)
      * @param {number} [options.batch=500] - Number of records to export in a single batch
      * @param {function} [options.progressFn] - Callback function to report progress
@@ -136,33 +135,22 @@ async function factory (pkgName) {
      */
     exportTo = (source, dest, options = {}) => {
       let {
-        filter = {}, ensureDir, useHeader = true, batch = 500,
-        progressFn, fields, parserOpts = {}
+        filter = {}, useHeader = true, batch = 500, opts = {},
+        progressFn, fields, parserOpts = {}, exportOpts = {}
       } = options
-      const { importPkg } = this.app.bajo
+      const { getDownloadDir } = this.app.bajo
       const { fs } = this.app.lib
       const { merge, omit } = this.app.lib._
       const { getModel } = this.app.dobo
+      const { generateId } = this.app.lib.aneka
 
       const getFile = async () => {
-        const increment = await importPkg('bajo:add-filename-increment')
-        let file
-        if (path.isAbsolute(dest)) file = dest
-        else {
-          file = `${this.app.getPluginDataDir(this.ns)}/export/${dest}`
-          fs.ensureDirSync(path.dirname(file))
-        }
-        file = increment(file, { fs: true, platform: 'win32' })
-        const dir = path.dirname(file)
-        if (!fs.existsSync(dir)) {
-          if (ensureDir) fs.ensureDirSync(dir)
-          else throw this.error('dirNotExists%s', dir)
-        }
+        let ext = path.extname(dest)
+        const file = `${getDownloadDir()}/${generateId()}${ext}`
         let compress = false
-        let ext = path.extname(file)
         if (ext === '.gz') {
           compress = true
-          ext = path.extname(file.slice(0, -3))
+          ext = path.extname(dest.slice(0, -3))
           // file = file.slice(0, file.length - 3)
         }
         if (!exts.includes(ext)) throw this.error('unsupportedFormat%s', ext.slice(1))
@@ -190,7 +178,17 @@ async function factory (pkgName) {
         for (;;) {
           const batchStart = new Date()
           const { data: rows, page } = await model.findRecord(filter, { dataOnly: false, fields, fmt: true, refs: '*', noCache: true })
-          const data = rows.map(item => omit(item, ['_immutable', '_fmt', '_ref']))
+          const data = rows.map(item => {
+            let _item = exportOpts.includes('fvalue') ? item._fmt : omit(item, ['_immutable', '_fmt', '_ref'])
+            if (exportOpts.includes('fkey')) {
+              const newItem = {}
+              for (const key in _item) {
+                newItem[opts.lang ? this.t(`field.${key}`, { lang: opts.lang }) : key] = _item[key]
+              }
+              _item = newItem
+            }
+            return _item
+          })
           if (data.length === 0) break
           if (cnt + data.length > hardCap) {
             const sliced = data.slice(0, hardCap - cnt)
