@@ -3,6 +3,7 @@
 ## 2026-07-26
 
 - [2.5.2] Bug fix in `exportTo()`
+- [2.6.0] Add support for `i18n` options in `exportTo()` function
 
 ## 2026-07-25
 

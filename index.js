@@ -140,9 +140,12 @@ async function factory (pkgName) {
       } = options
       const { getDownloadDir } = this.app.bajo
       const { fs } = this.app.lib
-      const { merge, omit } = this.app.lib._
+      const { merge, omit, pick } = this.app.lib._
       const { getModel } = this.app.dobo
       const { generateId } = this.app.lib.aneka
+
+      const i18n = pick(opts, ['lang', 'dateStyle', 'timeStyle', 'timeZone'])
+      const params = { dataOnly: false, fields, fmt: true, refs: '*', noCache: true, i18n }
 
       const getFile = async () => {
         let ext = path.extname(dest)
@@ -158,7 +161,7 @@ async function factory (pkgName) {
       }
 
       const getData = async (options = {}) => {
-        const { source, filter, count, stream, progressFn, fields } = options
+        const { source, filter, count, stream, progressFn } = options
         let cnt = count ?? 0
         const { find } = this.app.lib._
         const { getModel } = this.app.dobo
@@ -177,13 +180,13 @@ async function factory (pkgName) {
         filter.sort = `${sort ?? idField}:1`
         for (;;) {
           const batchStart = new Date()
-          const { data: rows, page } = await model.findRecord(filter, { dataOnly: false, fields, fmt: true, refs: '*', noCache: true })
+          const { data: rows, page } = await model.findRecord(filter, params)
           const data = rows.map(item => {
             let _item = exportOpts.includes('fvalue') ? item._fmt : omit(item, ['_immutable', '_fmt', '_ref'])
             if (exportOpts.includes('fkey')) {
               const newItem = {}
               for (const key in _item) {
-                newItem[opts.lang ? this.t(`field.${key}`, { lang: opts.lang }) : key] = _item[key]
+                newItem[i18n.lang ? this.t(`field.${key}`, { lang: i18n.lang }) : key] = _item[key]
               }
               _item = newItem
             }
@@ -242,7 +245,7 @@ async function factory (pkgName) {
             else if (ext === '.xlsx') pipes.push(xlsx.stringify(merge({}, { header: useHeader }, parserOpts)))
             if (compress) pipes.push(createGzip())
             DataStream.pipeline(stream, ...pipes).pipe(writer)
-            return getData({ source, filter, count, stream, fields, progressFn })
+            return getData({ source, filter, count, stream, progressFn })
           })
           .then(cnt => {
             count = cnt
