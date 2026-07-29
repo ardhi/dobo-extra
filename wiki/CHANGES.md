@@ -1,5 +1,9 @@
 # Changes
 
+## 2026-07-29
+
+- [2.7.0] Change `opts.i18n` to `opts.intl` in `exportTo()` function
+
 ## 2026-07-26
 
 - [2.5.2] Bug fix in `exportTo()`

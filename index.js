@@ -144,8 +144,8 @@ async function factory (pkgName) {
       const { getModel } = this.app.dobo
       const { generateId } = this.app.lib.aneka
 
-      const i18n = pick(opts, ['lang', 'dateStyle', 'timeStyle', 'timeZone'])
-      const params = { dataOnly: false, fields, fmt: true, refs: '*', noCache: true, i18n }
+      const intl = pick(opts, ['lang', 'datetime', 'date', 'time', 'timeZone'])
+      const params = { dataOnly: false, fields, fmt: true, refs: '*', noCache: true, intl }
 
       const getFile = async () => {
         let ext = path.extname(dest)
@@ -186,7 +186,7 @@ async function factory (pkgName) {
             if (exportOpts.includes('fkey')) {
               const newItem = {}
               for (const key in _item) {
-                newItem[i18n.lang ? this.t(`field.${key}`, { lang: i18n.lang }) : key] = _item[key]
+                newItem[intl.lang ? this.t(`field.${key}`, { lang: intl.lang }) : key] = _item[key]
               }
               _item = newItem
             }
