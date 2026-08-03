@@ -1,5 +1,10 @@
 # Changes
 
+## 2026-08-03
+
+- [2.7.1] Bug fix in `exportTo()` function
+- [2.7.1] Bug fix in `importFrom()` function
+
 ## 2026-07-29
 
 - [2.7.0] Change `opts.i18n` to `opts.intl` in `exportTo()` function

@@ -49,7 +49,7 @@ async function factory (pkgName) {
      * @param {string} source - Source file path (absolute or relative to plugin data dir)
      * @param {string|boolean} dest - Destination model name or `false`. If `false`, the data will be returned instead of being imported into a model.
      * @param {object} options - Import options
-     * @param {boolean} [options.trashOld=true] - Whether to clear the destination model before importing
+     * @param {boolean} [options.clear=true] - Whether to clear the destination model before importing
      * @param {number} [options.batch=100] - Number of records to import in a single batch.
      * @param {function} [options.progressFn] - Callback function to report progress
      * @param {function} [options.converterFn] - Callback function to convert each record before importing
@@ -59,7 +59,7 @@ async function factory (pkgName) {
      */
     importFrom = async (source, dest, options = {}) => {
       let {
-        trashOld = true, batch = 100, progressFn, converterFn, useHeader = true,
+        clear = true, batch = 100, progressFn, converterFn, useHeader = true,
         fileType, createOpts = {}, parserOpts = {}
       } = options
       const { merge } = this.app.lib._
@@ -82,7 +82,7 @@ async function factory (pkgName) {
         decompress = true
       }
       if (!exts.includes(ext)) throw this.error('unsupportedFormat%s', ext.slice(1))
-      if (trashOld && dest !== false) await dmodel.clearRecord()
+      if (clear && dest !== false) await dmodel.clearRecord({})
       const reader = fs.createReadStream(file)
       batch = parseInt(batch) || 100
       if (batch > this.config.import.maxBatch) batch = this.config.import.maxBatch
@@ -123,9 +123,10 @@ async function factory (pkgName) {
      * @async
      * @method
      * @param {string} source - Source model name
-     * @param {string} dest - Destination file path (absolute or relative to plugin data dir)
+     * @param {string} dest - Destination file path (absolute or relative to bajo download dir)
      * @param {object} options - Export options
      * @param {object} [options.filter={}] - Filter object to select records to export
+     * @param {boolean} [options.noBaseName=true] - If `true` (default), base name for the output file will be set using a random base name
      * @param {boolean} [options.useHeader=true] - Whether to include the header row (for CSV/TSV/XLSX)
      * @param {number} [options.batch=500] - Number of records to export in a single batch
      * @param {function} [options.progressFn] - Callback function to report progress
@@ -135,8 +136,8 @@ async function factory (pkgName) {
      */
     exportTo = (source, dest, options = {}) => {
       let {
-        filter = {}, useHeader = true, batch = 500, opts = {},
-        progressFn, fields, parserOpts = {}, exportOpts = {}
+        filter = {}, useHeader = true, batch = 500, opts = {}, noBaseName = true,
+        progressFn, fields, parserOpts = {}, exportOpts = []
       } = options
       const { getDownloadDir } = this.app.bajo
       const { fs } = this.app.lib
@@ -149,7 +150,9 @@ async function factory (pkgName) {
 
       const getFile = async () => {
         let ext = path.extname(dest)
-        const file = `${getDownloadDir()}/${generateId()}${ext}`
+        const base = noBaseName ? generateId() : path.basename(dest, ext)
+        const dir = dest.split('/').length === 1 ? getDownloadDir() : path.dirname(dest)
+        const file = `${dir}/${base}${ext}`
         let compress = false
         if (ext === '.gz') {
           compress = true

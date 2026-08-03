@@ -1,4 +1,4 @@
-import _path from 'path'
+import path from 'path'
 
 const batch = 100
 
@@ -6,25 +6,24 @@ function makeProgress (spin) {
   const { secToHms } = this.app.lib.aneka
   return async function ({ batchNo, data, batchStart, batchEnd } = {}) {
     if (data.length === 0) return
-    spin.setText('batch%d%s', batchNo, secToHms(batchEnd.toTime() - batchStart.toTime(), true))
+    spin.setText('batch%d%s', batchNo, secToHms(batchEnd - batchStart, true))
   }
 }
 
-async function exportTo (...args) {
+async function exportTo (appletPath, ...args) {
   const { importPkg } = this.app.bajo
-  const { dayjs } = this.app.lib
+  const { dayjs, fs } = this.app.lib
   const { isEmpty, map } = this.app.lib._
-  const { getInfo, start } = this.app.dobo
 
   const [input, select] = await importPkg('bajoCli:@inquirer/input',
     'bajoCli:@inquirer/select')
-  const schemas = map(this.app.dobo.schemas, 'name')
-  if (isEmpty(schemas)) return this.print.fatal('notFound%s', this.t('field.schema'))
-  let [model, dest, query] = args
+  const models = map(this.app.dobo.models, 'name')
+  if (isEmpty(models)) return this.print.fatal('notFound%s', this.t('field.model'))
+  let [dest, model, query] = args
   if (isEmpty(model)) {
     model = await select({
       message: this.t('chooseModel'),
-      choices: map(schemas, s => ({ value: s }))
+      choices: map(models, s => ({ value: s }))
     })
   }
   if (isEmpty(dest)) {
@@ -41,15 +40,15 @@ async function exportTo (...args) {
   }
   const spin = this.print.spinner().start('exporting')
   const progressFn = makeProgress.call(this, spin)
-  const { connection } = getInfo(model)
-  await start(connection.name)
+  await this.app.dobo.start()
   try {
     const filter = { query }
-    const result = await this.exportTo(model, dest, { filter, batch, progressFn })
-    spin.succeed('exported%d%s', result.count, _path.resolve(result.file))
+    const dir = this.app.getPluginDataDir(this.ns) + '/export'
+    fs.ensureDirSync(dir)
+    const result = await this.exportTo(model, `${dir}/${dest}`, { noBaseName: false, filter, batch, progressFn })
+    spin.succeed('exported%d%s', result.count, path.resolve(result.file))
   } catch (err) {
-    console.log(err)
-    spin.fatal('error%s', err.message)
+    spin.fatal(err)
   }
 }
 

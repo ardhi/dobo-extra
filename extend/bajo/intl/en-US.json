@@ -33,5 +33,7 @@
   "aboutToReplaceAllRecords": "You're about to replace ALL records with the new ones. Are you really sure?",
   "importing": "Importing...",
   "recordsImported%d%s": "%d records successfully imported from '%s'",
-  "aborted": "Aborted!"
+  "aborted": "Aborted!",
+  "_showOnScreen_": "- Show on screen -",
+  "aboutToAppendAllRecords": "You're about to append ALL records to the existing model. Are you really sure?"
 }
